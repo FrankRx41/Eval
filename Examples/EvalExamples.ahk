@@ -1,8 +1,9 @@
+﻿#Include ../Eval.ahk
 #SingleInstance Force
 SetBatchLines, -1
 
 ; Math Expressions
-Expression := "2**(4*-1+10)/Floor(-1.3) /* This is a multiline comment */,SomeText:=(2<<1)*-3/Sin(4),1+5*3 `;this is a single line comment`n . "" Appended line"""
+Expression := "2**(4*-1+10)/Floor(-1.3) /*`nThis is a multiline comment`n*/,SomeText:=(2<<1)*-3/Sin(4),1+5*3 `;this is a single line comment`n . "" Appended line"""
 Result := Eval(Expression)
 r := StrJoin(Result, "`n")
 MsgBox, 1, Math Expression, % "Original Expression: `n`n" Expression "`n`n`nResults:`n`n" r
