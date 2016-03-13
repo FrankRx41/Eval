@@ -113,6 +113,12 @@ Result := Eval(Expression)
 MsgBox, 1, Multi-dimensional Array in [key`, key] format, % "Expression: `n`n" Expression "`n`n`nResults:`n`n " Result[3]
 IfMsgBox, Cancel, ExitApp
 
+; Dynamic function call
+Expression := "fn := Func(""StrLen"").Bind(""Test""), %fn%(), fn.Call()"
+Result := Eval(Expression)
+MsgBox, 1, Dynamic function call, % "Expression: `n`n" Expression "`n`n`nResults:`n`n " Result[2] "`n " Result[3]
+IfMsgBox, Cancel, ExitApp
+
 ; Ternary Operator
 Eval("Level := 4")
 Loop, 3
