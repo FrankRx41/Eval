@@ -166,10 +166,12 @@ Eval($x, _CustomVars := "", _Init := true)
 				If (IsObject(_v))
 					_Objects[ObjName] := _v
 				Else If _v is not Number
+				{
 					_v := """" _v """"
 				,	HidString := "&_String" (ObjCount(_Elements) + 1) "_&"
 				,	_Elements[HidString] := _v
 				,	_v := HidString
+				}
 				RepString .= (IsObject(_v) ? """<~#" ObjName "#~>""" : _v) ", "
 			}
 			RepString := RTrim(RepString, ", ") ")"
@@ -208,10 +210,12 @@ Eval($x, _CustomVars := "", _Init := true)
 			If (IsObject($y))
 				_Objects[ObjName] := $y
 			Else If $y is not Number
+			{
 				$y := """" $y """"
 			,	HidString := "&_String" (ObjCount(_Elements) + 1) "_&"
 			,	_Elements[HidString] := $y
 			,	$y := HidString
+			}
 			$z[$i] := StrReplace($z[$i], _Match, IsObject($y) ? """<~#" ObjName "#~>""" : $y)
 		}
 		
