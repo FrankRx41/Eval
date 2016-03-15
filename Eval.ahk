@@ -31,7 +31,7 @@ Eval($x, _CustomVars := "", _Init := true)
 	; Strip off comments
 	$x := RegExReplace($x, "U)/\*.*\*/"), $x := RegExReplace($x, "U)\s;.*(\v|$)")
 	
-	; Replace brackets, braces, parenthesis and isolated Strings
+	; Replace brackets, braces, parenthesis and literal strings
 	While (RegExMatch($x, "sU)"".*""", _String))
 		_Elements["&_String" A_Index "_&"] := _String
 	,	$x := RegExReplace($x, "sU)"".*""", "&_String" A_Index "_&",, 1)
