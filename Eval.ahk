@@ -32,6 +32,7 @@ Eval($x, _CustomVars := "", _Init := true)
 	$x := RegExReplace($x, "U)/\*.*\*/"), $x := RegExReplace($x, "U)\s;.*(\v|$)")
 	
 	; Replace brackets, braces, parenthesis and literal strings
+	
 	While (RegExMatch($x, "sU)"".*""", _String))
 		_Elements["&_String" A_Index "_&"] := _String
 	,	$x := RegExReplace($x, "sU)"".*""", "&_String" A_Index "_&",, 1)
@@ -124,6 +125,7 @@ Eval($x, _CustomVars := "", _Init := true)
 		{
 			$z[$i] := StrReplace($z[$i], $pd, _Elements[$pd],, 1)
 		,	RegExMatch($z[$i], "\[(.*)\]", _Match)
+		,	_Match1 := RestoreElements(_Match1, _Elements)
 		,	$y := Eval(_Match1, _CustomVars, false)
 		,	ObjName := RegExReplace(_Match, "\W", "_")
 		,	_Objects[ObjName] := $y
