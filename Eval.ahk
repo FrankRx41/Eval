@@ -110,10 +110,12 @@ Eval($x, _CustomVars := "", _Init := true)
 			If (IsObject($y))
 				_Objects[ObjName] := $y
 			Else If $y is not Number
+			{
 				$y := """" StrReplace($y, """", """""") """"
 			,	HidString := "&_String" (ObjCount(_Elements) + 1) "_&"
 			,	_Elements[HidString] := $y
 			,	$y := HidString
+			}
 			$z[$i] := StrReplace($z[$i], _Match, IsObject($y) ? """<~#" ObjName "#~>""" : $y)
 		}
 		
