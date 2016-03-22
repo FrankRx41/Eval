@@ -138,12 +138,20 @@ Eval($x, _CustomVars := "", _Init := true)
 			$y := {}, o_Elements := {}
 		,	$o := _Elements[$pd]
 		,	$o := RestoreElements($o, _Elements)
+		,	$o := SubStr($o, 2, -1)
 			While (RegExMatch($o, "sU)"".*""", _String%A_Index%))
 				o_Elements["&_String" A_Index "_&"] := _String%A_Index%
 			,	$o := RegExReplace($o, "sU)"".*""", "&_String" A_Index "_&", "", 1)
-			$z[$i] := StrReplace($z[$i], $pd, $o,, 1)
-		,	RegExMatch($z[$i], "\{(.*)\}", _Match)
-			Loop, Parse, _Match1, `,, %A_Space%%A_Tab%
+			While (RegExMatch($o, "\[([^\[\]]++|(?R))*\]", _Bracket))
+				o_Elements["&_Bracket" A_Index "_&"] := _Bracket
+			,	$o := RegExReplace($o, "\[([^\[\]]++|(?R))*\]", "&_Bracket" A_Index "_&",, 1)
+			While (RegExMatch($o, "\{[^\{\}]++\}", _Brace))
+				o_Elements["&_Brace" A_Index "_&"] := _Brace
+			,	$o := RegExReplace($o, "\{[^\{\}]++\}", "&_Brace" A_Index "_&",, 1)
+			While (RegExMatch($o, "\(([^()]++|(?R))*\)", _Parent))
+				o_Elements["&_Parent" A_Index "_&"] := _Parent
+			,	$o := RegExReplace($o, "\(([^()]++|(?R))*\)", "&_Parent" A_Index "_&",, 1)
+			Loop, Parse, $o, `,, %A_Space%%A_Tab%
 			{
 				$o := StrSplit(A_LoopField, ":", " `t")
 			,	$o.1 := RestoreElements($o.1, o_Elements)
@@ -154,7 +162,7 @@ Eval($x, _CustomVars := "", _Init := true)
 			}
 			ObjName := RegExReplace(_Match, "\W", "_")
 		,	_Objects[ObjName] := $y
-		,	$z[$i] := StrReplace($z[$i], _Match, """<~#" ObjName "#~>""")
+		,	$z[$i] := StrReplace($z[$i], $pd, """<~#" ObjName "#~>""")
 		}
 		
 		; Restore and evaluate any remaining parenthesis
