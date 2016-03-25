@@ -168,7 +168,8 @@ Eval($x, _CustomVars := "", _Init := true)
 		; Restore and evaluate any remaining parenthesis
 		While (RegExMatch($z[$i], "&_Parent\d+_&", $pd))
 		{
-			_Match := RegExReplace(_Elements[$pd], "\((.*)\)", "$1")
+			_oMatch := StrSplit(_Elements[$pd], ",", " `t()")
+		,	_Match := RegExReplace(_Elements[$pd], "\((.*)\)", "$1")
 		,	_Match := RestoreElements(_Match, _Elements)
 		,	EvalResult := Eval(_Match, _CustomVars, false)
 		,	RepString := "("
@@ -179,10 +180,13 @@ Eval($x, _CustomVars := "", _Init := true)
 					_Objects[ObjName] := _v
 				Else If _v is not Number
 				{
-					_v := """" _v """"
-				,	HidString := "&_String" (ObjCount(_Elements) + 1) "_&"
-				,	_Elements[HidString] := _v
-				,	_v := HidString
+					If (_oMatch[_i] != "")
+					{
+						_v := """" _v """"
+					,	HidString := "&_String" (ObjCount(_Elements) + 1) "_&"
+					,	_Elements[HidString] := _v
+					,	_v := HidString
+					}
 				}
 				RepString .= (IsObject(_v) ? """<~#" ObjName "#~>""" : _v) ", "
 			}
@@ -214,10 +218,16 @@ Eval($x, _CustomVars := "", _Init := true)
 		; Check for Functions
 		While (RegExMatch($z[$i], "s)([\w%]+)\((.*?)\)", _Match))
 		{
-			_Match1 := (RegExMatch(_Match1, "^%(\S+)%$", $pd)) ? %$pd1% : _Match1
+			_oMatch := StrSplit(_Match2, ",", " `t")
+		,	_Match1 := (RegExMatch(_Match1, "^%(\S+)%$", $pd)) ? %$pd1% : _Match1
 		,	_Match2 := RestoreElements(_Match2, _Elements)
 		,	_Params := Eval(_Match2, _CustomVars, false)
-		,	$y := %_Match1%(_Params*)
+			For _i, _v in _oMatch
+			{
+				If (_v = "")
+					_Params.Delete(_i)
+			}
+			$y := %_Match1%(_Params*)
 		,	ObjName := RegExReplace(_Match, "\W", "_")
 			If (IsObject($y))
 				_Objects[ObjName] := $y
