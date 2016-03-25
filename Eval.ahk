@@ -218,16 +218,10 @@ Eval($x, _CustomVars := "", _Init := true)
 		; Check for Functions
 		While (RegExMatch($z[$i], "s)([\w%]+)\((.*?)\)", _Match))
 		{
-			_oMatch := StrSplit(_Match2, ",", " `t")
-		,	_Match1 := (RegExMatch(_Match1, "^%(\S+)%$", $pd)) ? %$pd1% : _Match1
+			_Match1 := (RegExMatch(_Match1, "^%(\S+)%$", $pd)) ? %$pd1% : _Match1
 		,	_Match2 := RestoreElements(_Match2, _Elements)
-		,	_Params := Eval(_Match2, _CustomVars, false)
-			For _i, _v in _oMatch
-			{
-				If (_v = "")
-					_Params.Delete(_i)
-			}
-			$y := %_Match1%(_Params*)
+		,	_Params := Eval(_Match2, _CustomVars)
+		,	$y := %_Match1%(_Params*)
 		,	ObjName := RegExReplace(_Match, "\W", "_")
 			If (IsObject($y))
 				_Objects[ObjName] := $y
