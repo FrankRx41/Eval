@@ -274,12 +274,6 @@ Eval($x, _CustomVars := "", _Init := true)
 		$z[$i] := StrJoin($Result,, false, _Init)
 	}
 	
-	$x := StrSplit($x, ",", " `t")
-	For _i, _v in $x
-	{
-		If (_v = "")
-			$z.Delete(_i)
-	}
 	return $z
 }
 
