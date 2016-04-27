@@ -1,6 +1,6 @@
 ﻿# Eval()
 
-## Evaluate Expressions in Strings.
+## Evaluate Expressions Dynamically in Strings.
 
 ### Credits
 ExprEval() by Uberi
