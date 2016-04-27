@@ -117,7 +117,7 @@ Eval($x, _CustomVars := "", _Init := true)
 			,	_Elements[HidString] := $y
 			,	$y := HidString
 			}
-			$z[$i] := StrReplace($z[$i], _Match, IsObject($y) ? """<~#" ObjName "#~>""" : $y)
+			$z[$i] := StrReplace($z[$i], _Match, IsObject($y) ? """<~#" ObjName "#~>""" : $y,, 1)
 		}
 		
 		; Assign Arrays
@@ -191,7 +191,7 @@ Eval($x, _CustomVars := "", _Init := true)
 				RepString .= (IsObject(_v) ? """<~#" ObjName "#~>""" : _v) ", "
 			}
 			RepString := RTrim(RepString, ", ") ")"
-		,	$z[$i] := StrReplace($z[$i], $pd, RepString)
+		,	$z[$i] := StrReplace($z[$i], $pd, RepString,, 1)
 		}
 		
 		; Check whether the whole string is an object
@@ -232,7 +232,7 @@ Eval($x, _CustomVars := "", _Init := true)
 			,	_Elements[HidString] := $y
 			,	$y := HidString
 			}
-			$z[$i] := StrReplace($z[$i], _Match, IsObject($y) ? """<~#" ObjName "#~>""" : $y)
+			$z[$i] := StrReplace($z[$i], _Match, IsObject($y) ? """<~#" ObjName "#~>""" : $y,, 1)
 		}
 		
 		; Dereference variables in percent signs
