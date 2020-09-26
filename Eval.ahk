@@ -279,6 +279,10 @@ Eval($x, _CustomVars := "", _Init := true)
 		}
 	}
 	
+	; Check if there are still math operations inside the resulting string
+	If (RegExMatch(StrJoin($z), "^\s*\b\d+\b\s*[+\-/<>&^|``%!~*]+\s*\b\d+\b\s*$"))
+		return Eval(StrJoin($z), _CustomVars, false)
+	
 	return $z
 }
 
