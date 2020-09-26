@@ -3,7 +3,7 @@
 SetBatchLines, -1
 
 ; Math Expressions
-Expression := "2**(4*-1+10)/Floor(-1.3) /*`nThis is a multiline comment`n*/,SomeText:=(2<<1)*-3/Sin(4),1+5*3 `;this is a single line comment`n . "" Appended line"""
+Expression := "-(2.616700)-193,2**(4*-1+10)/Floor(-1.3) /*`nThis is a multiline comment`n*/,SomeText:=(2<<1)*-3/Sin(4),1+5*3 `;this is a single line comment`n . "" Appended line"""
 Result := Eval(Expression)
 r := StrJoin(Result, "`n")
 MsgBox, 1, Math Expression, % "Expression: `n`n" Expression "`n`n`nResults:`n`n" r
@@ -17,9 +17,10 @@ MsgBox, 1, Operators, % "Expression: `n`n" Expression "`n`n`nResults:`n`n" r
 IfMsgBox, Cancel, ExitApp
 
 ; Variable Assignment
-Expression := "VarX := ""First,Second,Third,Fourth"""
+Expression := "VarA := 123,VarB := VarA - 23,VarX := ""First,Second,Third,Fourth"""
 Result := Eval(Expression)
-MsgBox, 1, Variable Assignment, % "Expression: `n`n" Expression "`n`n`nResults:`n`n" VarX
+r := StrJoin(Result, "`n")
+MsgBox, 1, Variable Assignment, % "Expression: `n`n" Expression "`n`n`nResults:`n`n" r
 IfMsgBox, Cancel, ExitApp
 
 ; String & Function
@@ -137,19 +138,19 @@ MsgBox, 1, Ternary Operator with objects, % "Expression: `n`n" Expression "`n`n`
 IfMsgBox, Cancel, ExitApp
 
 ; COM Object Expressions
-Expression := "ie := ComObjCreate(""InternetExplorer.Application""), ie.Visible := true, ie.Navigate(""www.autohotkey.com"")"
+Expression := "ie := ComObjCreate(""InternetExplorer.Application""), ie.Visible := true, ie.Navigate(""www.autohotkey.com/search/"")"
 MsgBox, 1, COM Object Expressions, % "Expression: `n`n" Expression "`n`n`nPress OK to execute"
 IfMsgBox, Cancel, ExitApp
 Result := Eval(Expression)
 
 ; Set COM Object Property
-Expression := "ie.document.getElementsByName(""q"")[0].Value := ""comobjcreate"""
+Expression := "ie.document.getElementsByName(""search"")[0].Value := ""comobjcreate"""
 MsgBox, 1, Set COM Object Property, % "Expression: `n`n" Expression "`n`n`nPress OK to execute"
 IfMsgBox, Cancel, ExitApp
 Result := Eval(Expression)
 
 ; Get COM Object Property
-Expression := "Query := ie.document.getElementsByName(""q"")[0].Value"
+Expression := "Query := ie.document.getElementsByName(""search"")[0].Value"
 Result := Eval(Expression)
 MsgBox,, Get COM Object Property, % "Expression: `n`n" Expression "`n`n`nResults:`n`nQuery: " Query
 

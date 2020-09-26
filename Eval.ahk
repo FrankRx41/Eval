@@ -252,6 +252,15 @@ Eval($x, _CustomVars := "", _Init := true)
 		While (RegExMatch($z[$i], "(""&_String\d+_&""\s+)([^\d\.,\s:\?])"))
 			$z[$i] := RegExReplace($z[$i], "(""&_String\d+_&""\s+)([^\d\.,\s:\?])", "$1. $2")
 		
+		; Remove remaining parenthesis to allow math operations
+		While (RegExMatch($z[$i], "\(([^()]++|(?R))*\)"))
+			$z[$i] := RegExReplace($z[$i], "\(([^()]++|(?R))*\)", "$1")
+		
+		; Evaluate right hand of assignments
+		AssignParse($z[$i], _InVar, _OnOper, _OutValue)
+		If ((!InStr(_OutValue, "&_String")) && (_InVar && _OnOper && _OutValue))
+			$z[$i] := _InVar . _OnOper . Eval(_OutValue, _CustomVars, false)[1]
+
 		; Evaluate parsed expression with ExprEval()
 		ExprInit()
 	,	CompiledExpression := ExprCompile($z[$i])
@@ -280,8 +289,11 @@ Eval($x, _CustomVars := "", _Init := true)
 	}
 	
 	; Check if there are still math operations inside the resulting string
-	If (RegExMatch(StrJoin($z), "^\s*\b\d+\b\s*[+\-/<>&^|``%!~*]+\s*\b\d+\b\s*$"))
-		return Eval(StrJoin($z), _CustomVars, false)
+	For _i, _v in $z
+	{
+		If (RegExMatch(_v, "^\s*\b\d+\b\s*[+\-/<>&^|``%!~*]+\s*\b\d+\b\s*$"))
+			$z[_i] := Eval($z[_i], _CustomVars, false)[1]
+	}
 	
 	return $z
 }
