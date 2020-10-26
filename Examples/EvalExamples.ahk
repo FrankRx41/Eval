@@ -17,7 +17,7 @@ MsgBox, 1, Operators, % "Expression: `n`n" Expression "`n`n`nResults:`n`n" r
 IfMsgBox, Cancel, ExitApp
 
 ; Variable Assignment
-Expression := "A := 100, B := A - 5 - 10 - 15, B, VarA := 123,VarB := VarA - 23,VarX := ""First,Second,Third,Fourth"""
+Expression := "A := 100, B := A - 5 - 10 - 15, B, C := A - B - 5, VarA := 123,VarB := VarA - 23,VarX := ""First,Second,Third,Fourth"""
 Result := Eval(Expression)
 r := StrJoin(Result, "`n")
 MsgBox, 1, Variable Assignment, % "Expression: `n`n" Expression "`n`n`nResults:`n`n" r
