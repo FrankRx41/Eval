@@ -214,6 +214,15 @@ Eval($x, _CustomVars := "", _Init := true)
 			,	$z[$i] := """<~#" ObjName "#~>"""
 			}
 		}
+
+		; Check for {} object assignment
+		If (RegExMatch($z[$i], "\{\s*\}", _Match))
+		{
+			$y := Object()
+		,	ObjName := "_emptyObj"
+		,	_Objects[ObjName] := $y
+		,	$z[$i] := StrReplace($z[$i], _Match, """<~#" ObjName "#~>""")
+		}
 		
 		; Check for Functions
 		While (RegExMatch($z[$i], "s)([\w%]+)\((.*?)\)", _Match))
@@ -242,10 +251,14 @@ Eval($x, _CustomVars := "", _Init := true)
 		
 		; ExprEval() cannot parse Unicode strings, so the "real" strings are "hidden" from ExprCompile() and restored later
 		$z[$i] := RestoreElements($z[$i], _Elements)
-	,	__Elements := {}
-		While (RegExMatch($z[$i], "sU)""(.*)""", _String))
-			__Elements["&_String" A_Index "_&"] := _String1
-		,	$z[$i] := RegExReplace($z[$i], "sU)"".*""", "&_String" A_Index "_&",, 1)
+	,	__Elements := {}, _Pos := 1
+		While (RegExMatch($z[$i], "sU)""(.*)""", _String, _Pos))
+		{
+			If (!RegExMatch(_String1, "^<~#.*#~>$"))
+				__Elements["&_String" A_Index "_&"] := _String1
+			,	$z[$i] := RegExReplace($z[$i], "sU)"".*""", "&_String" A_Index "_&",, 1)
+			_Pos += StrLen(_String1)
+		}
 		$z[$i] := RegExReplace($z[$i], "&_String\d+_&", """$0""")
 		
 		; Add concatenate operator after strings where necessary
@@ -258,7 +271,7 @@ Eval($x, _CustomVars := "", _Init := true)
 		
 		; Evaluate right hand of assignments
 		AssignParse($z[$i], _InVar, _OnOper, _OutValue)
-		If ((!InStr(_OutValue, "&_String")) && (_InVar && _OnOper && _OutValue))
+		If ((!InStr(_OutValue, "&_String")) && (!RegExMatch(_OutValue, "^""<~#.*#~>""$")) && (_InVar && _OnOper && _OutValue))
 			$z[$i] := _InVar . _OnOper . Eval(_OutValue, _CustomVars, false)[1]
 
 		; Evaluate parsed expression with ExprEval()
