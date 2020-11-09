@@ -423,7 +423,7 @@ StrJoin(InputArray, JChr := "", Quote := false, Init := true, Unquote := false)
 			If (Quote)
 				v := """" v """"
 			If (Unquote)
-				While (RegExMatch(v, """{2}",, Pos))
+				While (RegExMatch(v, """{2}"))
 					v := RegExReplace(v, """{2}", """")
 		}
 		JoinedStr .= v . JChr
