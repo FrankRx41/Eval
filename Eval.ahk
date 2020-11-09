@@ -254,7 +254,13 @@ Eval($x, _CustomVars := "", _Init := true)
 	,	__Elements := {}, _Pos := 1
 		While (RegExMatch($z[$i], "sU)""(.*)""", _String, _Pos))
 		{
-			If (!RegExMatch(_String1, "^<~#.*#~>$"))
+			If (RegExMatch($z[$i], "sU)^""({.*})""$", _Brace))
+				__Elements["&_String" A_Index "_&"] := _Brace1
+			,	$z[$i] := RegExReplace($z[$i], "sU)^""{.*}""$", "&_String" A_Index "_&",, 1)
+			Else If (RegExMatch($z[$i], "sU)^""([.*])""$", _Bracket))
+				__Elements["&_String" A_Index "_&"] := _Bracket1
+			,	$z[$i] := RegExReplace($z[$i], "sU)^""[.*]""$", "&_String" A_Index "_&",, 1)
+			Else If (!RegExMatch(_String1, "^<~#.*#~>$"))
 				__Elements["&_String" A_Index "_&"] := _String1
 			,	$z[$i] := RegExReplace($z[$i], "sU)"".*""", "&_String" A_Index "_&",, 1)
 			_Pos += StrLen(_String1)
@@ -287,7 +293,7 @@ Eval($x, _CustomVars := "", _Init := true)
 				$Result[_i] := _Objects[$pd1]
 		}
 		
-		$z[$i] := StrJoin($Result,, false, _Init)
+		$z[$i] := StrJoin($Result,, false, _Init, _Init)
 	}
 	
 	; If returning to the original call, remove missing expressions from the array
@@ -404,7 +410,7 @@ AssignParse(String, ByRef VarName, ByRef Oper, ByRef VarValue)
 ,	VarName := Trim(Out1), Oper := Out2, VarValue := Trim(Out4)
 }
 
-StrJoin(InputArray, JChr := "", Quote := false, Init := true)
+StrJoin(InputArray, JChr := "", Quote := false, Init := true, Unquote := false)
 {
 	For i, v in InputArray
 	{
@@ -416,6 +422,9 @@ StrJoin(InputArray, JChr := "", Quote := false, Init := true)
 				v := RegExReplace(v, """{1,2}", """""")
 			If (Quote)
 				v := """" v """"
+			If (Unquote)
+				While (RegExMatch(v, """{2}",, Pos))
+					v := RegExReplace(v, """{2}", """")
 		}
 		JoinedStr .= v . JChr
 	}
